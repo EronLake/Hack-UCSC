@@ -189,6 +189,7 @@
     numProtein: 5,
     numBacteria: 2,
     initialize: function() {
+
       this.canvas.width = this.width;
       this.canvas.height = this.height;
       this.context = this.canvas.getContext('2d');
@@ -200,8 +201,8 @@
       }
 
       this.cell = Cell.create({
-        x: 5,
-        y: 7
+        x: (this.width - Cell.width) / 2,
+        y: (this.height - Cell.height) / 2
       });
 
 
