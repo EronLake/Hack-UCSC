@@ -39,8 +39,11 @@ canvas {
 	width: 100%;
 	z-index: 2;
   font-family: 'Alpha Echo';
-  font-size: 2em;
+  font-size: 1.5em;
   text-align: center;
+}
+#status .value {
+	font-size: 2em;
 }
 #score-wrapper,
 #timer-wrapper,
