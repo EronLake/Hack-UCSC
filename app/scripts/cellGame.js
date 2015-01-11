@@ -91,10 +91,13 @@
         width: 50,
         height: 50,
         velocity: 10,
+        score: 0, 
         image: document.getElementById('cellImage'),
         eat: function(nutrition){
             this.health = Math.min(this.health + nutrition, MAX_HEALTH);
+            this.score += nutrition;
         }
+
     })
 
     var Bacteria = MoveableSprite.create({
@@ -188,7 +191,7 @@
             for(var i = 0; i < this.proteins.length; i++){
                 this.proteins[i].draw(this.context);
             }
-
+            this.scoreElement.textContent = this.cell.score;
             this.healthElement.textContent = this.cell.health;
             this.timerElement.textContent = ((Date.now() - this.startTime)/1000).toFixed(1);
 
@@ -214,7 +217,8 @@
             width: 600,
             height: 400,
             healthElement: document.getElementById('health'),
-            timerElement: document.getElementById('timer')
+            timerElement: document.getElementById('timer'),
+            scoreElement: document.getElementById('score')
         });
         world.initialize();
     }
