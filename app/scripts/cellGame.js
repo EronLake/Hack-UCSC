@@ -247,7 +247,10 @@
     },
 
     onKeyUp: function(event) {
-      this.cell.direction = STATIONARY;
+      var direction = this.keyCodeToDirection[event.keyCode];
+      if (direction === this.cell.direction) {
+        this.cell.direction = STATIONARY;
+      }
     },
 
     clear: function() {
