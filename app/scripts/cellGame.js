@@ -15,6 +15,7 @@
     var KEY_RIGHT = 39;
     var KEY_DOWN = 40;
     var STATIONARY = 0;
+    var MAX_HEALTH = 100;
 
 
     var Base = {
@@ -42,6 +43,9 @@
         },
         draw: function(context){
             context.drawImage(this.image, this.getLeft(), this.getTop(), this.width, this.height);
+        },
+        intersects: function(sprite){
+            return (Math.min(this.getBottom(), sprite.getBottom()) >= Math.max(this.getTop(), sprite.getTop()) && Math.min(this.getRight(), sprite.getRight()) >= Math.max(this.getLeft(), sprite.getLeft()));
         }
     })
 
@@ -83,11 +87,14 @@
     })
 
     var Cell = MoveableSprite.create({
-        health: 100,
+        health: MAX_HEALTH,
         width: 50,
         height: 50,
         velocity: 10,
-        image: document.getElementById('cellImage')
+        image: document.getElementById('cellImage'),
+        eat: function(nutrition){
+            this.health = Math.min(this.health + nutrition, MAX_HEALTH);
+        }
     })
 
     var Bacteria = MoveableSprite.create({
@@ -163,15 +170,26 @@
 
         loop: function () {
             this.cell.move(this.bounds);
-            
+
+            var i = this.proteins.length;
+            var protein;
+            while (i--) {
+                protein = this.proteins[i];
+                if (protein.intersects(this.cell)) {
+                    this.proteins.splice(i, 1); 
+                    this.cell.eat(protein.nutrition);
+                }
+            }
 
             this.clear();
             this.cell.draw(this.context);
-            this.healthElement.textContent = this.cell.health;
+           
+
             for(var i = 0; i < this.proteins.length; i++){
                 this.proteins[i].draw(this.context);
             }
 
+            this.healthElement.textContent = this.cell.health;
             this.timerElement.textContent = ((Date.now() - this.startTime)/1000).toFixed(1);
 
         },
@@ -206,4 +224,3 @@
 })();
 
 
- //     return (Math.min(this.bottom, region.bottom) >= Math.max(this.top, region.top) && Math.min(this.right, region.right) >= Math.max(this.left, region.left));
