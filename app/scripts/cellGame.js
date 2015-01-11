@@ -116,7 +116,7 @@
     attack: .5,
     width: 40,
     height: 40,
-    velocity: 3,
+    velocity: 3.5,
     iq: .8,
     image: document.getElementById('standardBacteriaImage'),
     think: function(cell) {
@@ -257,7 +257,7 @@
       this.cell.move(this.bounds);
 
       // move protein
-      if (this.proteins.length < 5 && (now - this.lastCreatedProteinTime) > 5000) {
+      if (this.proteins.length < 5 && (now - this.lastCreatedProteinTime) > 3000) {
         this.createProtein();
       }
 
