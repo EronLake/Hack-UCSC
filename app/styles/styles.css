@@ -1,3 +1,7 @@
 #sprites {
 	display: none;
 }
+
+canvas {
+	background: #000;
+}

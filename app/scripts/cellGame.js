@@ -5,7 +5,7 @@
 (function() {
 
     'use strict';
-    
+
     var LEFT = 1;
     var UP = 2;
     var RIGHT = 4;
@@ -48,21 +48,38 @@
     var MoveableSprite = Sprite.create({
         velocity: 0,
         direction: STATIONARY,
-        move: function(){
+        move: function(bounds){
             if(this.direction === RIGHT) {
-                this.x += this.velocity;
+                if(this.getRight() + this.velocity < bounds.right){
+                    this.x += this.velocity;
+                } else {
+                    this.x = bounds.right - this.width;
+                }
             } else if(this.direction === LEFT) {
-                this.x -= this.velocity;
+                if(this.getLeft() - this.velocity >= bounds.left){
+                    this.x -= this.velocity;
+                } else {
+                    this.x = bounds.left;
+                }
             } else if(this.direction === DOWN) {
-                this.y += this.velocity;
+                if(this.getBottom() + this.velocity < bounds.bottom){
+                    this.y += this.velocity;
+                } else {
+                    this.y = bounds.bottom - this.height;
+                }
             } else if(this.direction === UP) {
-                this.y -= this.velocity;
+               if(this.getTop() - this.velocity >= bounds.top){
+                    this.y -= this.velocity;
+                } else {
+                    this.y = bounds.top;
+                }
             }
         }
     })
 
     var Protein = Sprite.create({
-        nutrition: 5
+        nutrition: 5,
+        image: document.getElementById('proteinImage')
     })
 
     var Cell = MoveableSprite.create({
@@ -86,12 +103,30 @@
         canvas: null,
         context: null,
         cell: null,
+        numProtein: 5,
         initialize: function() {
+            this.canvas.width = this.width;
+            this.canvas.height = this.height;
             this.context = this.canvas.getContext('2d');
+            this.bounds = {
+                left:0,
+                top:0,
+                right: this.width,
+                bottom: this.height
+            }
+
             this.cell = Cell.create({
                 x: 5,
                 y: 7
             });
+
+
+            this.proteins = [];
+            for(var i = 0; i < this.numProtein; i++){
+                this.createProtein();
+            }
+
+
             this.initalizeControls();
             setInterval(this.loop.bind(this), 1000/60)
         },
@@ -123,19 +158,40 @@
         },
 
         clear: function() {
-            this.canvas.width = canvas.width;
+            this.canvas.width = this.canvas.width;
         },
 
         loop: function () {
-            this.cell.move();
+            this.cell.move(this.bounds);
+            
+
             this.clear();
             this.cell.draw(this.context);
+            for(var i = 0; i < this.proteins.length; i++){
+                this.proteins[i].draw(this.context);
+            }
+
+        },
+
+        createProtein: function() {
+            var size = Math.random() *10 + 30;
+
+            var protein = Protein.create({
+                width: size,
+                height: size,
+                x: Math.random() * (this.width - size),  
+                y: Math.random() * (this.height - size),  
+            })
+
+            this.proteins.push(protein);
         }
     })
 
     function main() {
         var world = World.create({
-            canvas: document.getElementById('canvas')
+            canvas: document.getElementById('canvas'),
+            width: 600,
+            height: 400
         });
         world.initialize();
     }
