@@ -1,34 +1,8 @@
-/*(function(scope) {
-    
-    function CustomSprite(src) {
-        this.initialize(src);
-    }
-    
-    var p = CustomSprite.prototype = new createjs.Bitmap();
-    
-    p.move = function(x, y) {
-         this.x = x;
-        this.y = y;
-    };
-    
-    scope.CustomSprite = CustomSprite;
-    
-}(this));
+/**
+ * Cell Game
+ * @author Eron Lake
+ */
 
-
-var stage = new createjs.Stage("canvas");
-createjs.Ticker.addEventListener("tick", tick);
-
-var sprite = new this.CustomSprite('images/cat.png');
-stage.addChild(sprite);
-
-function tick(event) {
-    
-    sprite.move(0, 0);
-    
-    stage.update();
-}
-*/
 var Base = {
     create: function(config){
         return $.extend(Object.create(this),config)
