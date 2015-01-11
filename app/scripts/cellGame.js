@@ -101,9 +101,10 @@
     })
 
     var Bacteria = MoveableSprite.create({
-        attack: 5,
-        width: 10,
-        height: 10
+        attack: .5,
+        width: 40,
+        height: 40,
+        image: document.getElementById('standardBacteriaImage')
     })
 
 
@@ -114,6 +115,7 @@
         context: null,
         cell: null,
         numProtein: 5,
+        numBacteria: 2,
         initialize: function() {
             this.canvas.width = this.width;
             this.canvas.height = this.height;
@@ -134,6 +136,11 @@
             this.proteins = [];
             for(var i = 0; i < this.numProtein; i++){
                 this.createProtein();
+            }
+
+            this.bacterias = [];
+            for(var i = 0; i < this.numBacteria; i++){
+                this.createBacteria();
             }
 
             this.initalizeControls();
@@ -174,6 +181,7 @@
         loop: function () {
             this.cell.move(this.bounds);
 
+            var now = Date.now();
             var i = this.proteins.length;
             var protein;
             while (i--) {
@@ -184,17 +192,47 @@
                 }
             }
 
-            this.clear();
-            this.cell.draw(this.context);
-           
+            if(this.proteins.length < 5 && (now - this.lastCreatedProteinTime) > 5000 ){
+                this.createProtein();
+            }
 
+            var bacteria;
+            for(var i = 0;i < this.bacterias.length; i++){
+                bacteria = this.bacterias[i];
+                if (bacteria.intersects(this.cell)) {
+                   this.cell.health -= bacteria.attack;
+                }
+            }
+
+
+            this.clear();
+           
             for(var i = 0; i < this.proteins.length; i++){
                 this.proteins[i].draw(this.context);
             }
+
+            this.cell.draw(this.context);
+
+
+            for(var i = 0; i < this.bacterias.length; i++){
+                this.bacterias[i].draw(this.context);
+            }
+
             this.scoreElement.textContent = this.cell.score;
             this.healthElement.textContent = this.cell.health;
-            this.timerElement.textContent = ((Date.now() - this.startTime)/1000).toFixed(1);
+            this.timerElement.textContent = ((now - this.startTime)/1000).toFixed(1);
 
+        },
+
+        createBacteria: function() {
+           
+            var bacteria = Bacteria.create({
+                x: Math.random() * (this.width - Bacteria.width),  
+                y: Math.random() * (this.height - Bacteria.height),  
+            })
+
+            this.bacterias.push(bacteria);
+            this.lastCreatedBacteriaTime = Date.now();
         },
 
         createProtein: function() {
@@ -208,14 +246,15 @@
             })
 
             this.proteins.push(protein);
+            this.lastCreatedProteinTime = Date.now();
         }
     })
 
     function main() {
         var world = World.create({
             canvas: document.getElementById('canvas'),
-            width: 600,
-            height: 400,
+            width: window.innerWidth,
+            height: window.innerHeight * .7,
             healthElement: document.getElementById('health'),
             timerElement: document.getElementById('timer'),
             scoreElement: document.getElementById('score')

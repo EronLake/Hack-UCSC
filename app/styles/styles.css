@@ -4,4 +4,17 @@
 
 canvas {
 	background: #000;
+	background-image:url(../images/cat.png);
+	background-size:cover;
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+#status {
+	position: absolute;
+	left: 50%;
+	bottom: 10%;
+	z-index: 2;
+	transform: translate(-50%, 0);
 }
