@@ -118,6 +118,12 @@
         }
     })
 
+    var BombBacteria = Bacteria.create({
+        attack: 1,
+        velocity: 1,
+        image: document.getElementById('bombBacteriaImage')
+    })
+
 
     var World = Base.create({
         width: 0,
@@ -150,8 +156,11 @@
             }
 
             this.bacterias = [];
-            for(var i = 0; i < this.numBacteria; i++){
-                this.createBacteria();
+            for(var i = 0; i < 3; i++){
+                this.createBacteria(Bacteria);
+            }
+            for(var i = 0; i < 7; i++){
+                this.createBacteria(BombBacteria);
             }
 
             this.initalizeControls();
@@ -242,11 +251,11 @@
 
         },
 
-        createBacteria: function() {
+        createBacteria: function(bacteriaType) {
            
-            var bacteria = Bacteria.create({
-                x: Math.random() * (this.width - Bacteria.width),  
-                y: Math.random() * (this.height - Bacteria.height),  
+            var bacteria = bacteriaType.create({
+                x: Math.random() * (this.width - bacteriaType.width),  
+                y: Math.random() * (this.height - bacteriaType.height),  
             })
 
             this.bacterias.push(bacteria);
