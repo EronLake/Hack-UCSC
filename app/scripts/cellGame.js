@@ -126,8 +126,8 @@
                 this.createProtein();
             }
 
-
             this.initalizeControls();
+            this.startTime = Date.now();
             setInterval(this.loop.bind(this), 1000/60)
         },
             
@@ -167,9 +167,12 @@
 
             this.clear();
             this.cell.draw(this.context);
+            this.healthElement.textContent = this.cell.health;
             for(var i = 0; i < this.proteins.length; i++){
                 this.proteins[i].draw(this.context);
             }
+
+            this.timerElement.textContent = ((Date.now() - this.startTime)/1000).toFixed(1);
 
         },
 
@@ -191,7 +194,9 @@
         var world = World.create({
             canvas: document.getElementById('canvas'),
             width: 600,
-            height: 400
+            height: 400,
+            healthElement: document.getElementById('health'),
+            timerElement: document.getElementById('timer')
         });
         world.initialize();
     }
