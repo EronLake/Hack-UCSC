@@ -113,11 +113,11 @@
   })
 
   var Bacteria = MoveableSprite.create({
-    attack: .5,
+    attack: .1,
     width: 40,
     height: 40,
-    velocity: 3.5,
-    iq: .8,
+    velocity: 4,
+    iq: .4,
     image: document.getElementById('standardBacteriaImage'),
     think: function(cell) {
       if (this.iq > Math.random()) {
@@ -158,19 +158,23 @@
   })
 
   var proteinLesson = Lesson.create({
-    text: 'Cell need protein to survive'
+    text: 'Proteins nourish cells.'
   })
 
   var bacteriaLesson = Lesson.create({
-    text: 'Bacteria can hurt cells'
+    text: 'Bacteria can damage cells.'
   })
 
   var bombBacteriaLesson = Lesson.create({
-    text: 'viruses can critically injure cells'
+    text: 'Viruses can critically injure cells.'
+  })
+
+  var lowHealthLesson = Lesson.create({
+    text: 'Cells need protein to survive.'
   })
 
   var deathLesson = Lesson.create({
-    text: 'when a cell become too unhealthy they die'
+    text: 'When a cell becomes too unhealthy it dies.'
   })
 
 
@@ -314,13 +318,18 @@
       }
 
       this.scoreElement.textContent = this.cell.score;
-      this.healthElement.textContent = this.cell.health;
+      this.healthElement.textContent = this.cell.health.toFixed(0);
       this.timerElement.textContent = ((now - this.startTime) / 1000).toFixed(1);
 
       // continue?
+      if (this.cell.health < 20) {
+        lowHealthLesson.teach();
+      }
+
       if (this.cell.health <= 0) {
         deathLesson.teach();
         clearInterval(this.timer);
+        document.getElementById('restart').classList.add('visible');
       }
     },
 
