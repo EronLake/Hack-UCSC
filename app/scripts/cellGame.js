@@ -116,7 +116,7 @@
     attack: .1,
     width: 40,
     height: 40,
-    velocity: 4,
+    velocity: 4.5,
     iq: .4,
     image: document.getElementById('standardBacteriaImage'),
     think: function(cell) {
@@ -131,16 +131,18 @@
         }
       } else {
         // atrificial stupidity
-        var directions = [LEFT, UP, RIGHT, DOWN];
+        var directions = [LEFT, UP, RIGHT, DOWN, STATIONARY];
         var index = Math.floor(Math.random() * directions.length)
         this.direction = directions[index];
-      }
+      } 
     }
   })
 
   var BombBacteria = Bacteria.create({
     attack: 1,
     velocity: .5,
+    width: 15,
+    height: 30,
     iq: .2,
     image: document.getElementById('bombBacteriaImage')
   })
