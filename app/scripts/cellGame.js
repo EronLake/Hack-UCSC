@@ -191,6 +191,7 @@
     numProtein: 5,
     numBacteria: 2,
     initialize: function() {
+
       this.canvas.width = this.width;
       this.canvas.height = this.height;
       this.context = this.canvas.getContext('2d');
@@ -202,8 +203,8 @@
       }
 
       this.cell = Cell.create({
-        x: 5,
-        y: 7
+        x: (this.width - Cell.width) / 2,
+        y: (this.height - Cell.height) / 2
       });
 
 
@@ -248,7 +249,10 @@
     },
 
     onKeyUp: function(event) {
-      this.cell.direction = STATIONARY;
+      var direction = this.keyCodeToDirection[event.keyCode];
+      if (direction === this.cell.direction) {
+        this.cell.direction = STATIONARY;
+      }
     },
 
     clear: function() {
