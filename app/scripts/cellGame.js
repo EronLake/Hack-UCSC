@@ -116,23 +116,32 @@
         attack: .5,
         width: 40,
         height: 40,
-        velocity: 6,
+        velocity: 4,
+        iq: .8,
         image: document.getElementById('standardBacteriaImage'),
         think: function(cell) {
-            var deltaX = this.x - cell.x;
-            var deltaY = this.y - cell.y
-            if(Math.abs(deltaX) > Math.abs(deltaY)){
-                this.direction = (deltaX > 0) ? LEFT : RIGHT;
+            if(this.iq > Math.random()){
+                // artificial inteligence
+                var deltaX = this.x - cell.x;
+                var deltaY = this.y - cell.y
+                if(Math.abs(deltaX) > Math.abs(deltaY)){
+                    this.direction = (deltaX > 0) ? LEFT : RIGHT;
+                } else {
+                    this.direction = (deltaY> 0) ? UP : DOWN;
+                }
             } else {
-                this.direction = (deltaY> 0) ? UP : DOWN;
+                // atrificial stupidity
+                var directions = [LEFT,UP,RIGHT,DOWN];
+                var index = Math.floor(Math.random() * directions.length)
+                this.direction = directions[index];
             }
-
         }
     })
 
     var BombBacteria = Bacteria.create({
         attack: 1,
         velocity: 1,
+        iq: .2,
         image: document.getElementById('bombBacteriaImage')
     })
 
@@ -159,6 +168,11 @@
     var bombBacteriaLesson = Lesson.create({
         text: 'viruses can critically injure cells'
     })
+
+    var deathLesson = Lesson.create({
+        text: 'when a cell become too unhealthy they die'
+    })
+
 
 
 
@@ -202,7 +216,7 @@
 
             this.initalizeControls();
             this.startTime = Date.now();
-            setInterval(this.loop.bind(this), 1000/60)
+            this.timer = setInterval(this.loop.bind(this), 1000/60)
         },
             
         initalizeControls: function() {
@@ -236,15 +250,23 @@
         },
 
         loop: function () {
+            // move cell
             this.cell.move(this.bounds);
 
+            // move protein
+            if(this.proteins.length < 5 && (now - this.lastCreatedProteinTime) > 5000 ){
+                this.createProtein();
+            }
+
+            // move bacteria
             var bacteria;
             for(var i= 0; i < this.bacterias.length; i++){
                 bacteria = this.bacterias[i];
                 bacteria.think(this.cell);
                 bacteria.move(this.bounds);
             }
-
+        
+            //collision detection 
             var now = Date.now();
             var i = this.proteins.length;
             var protein;
@@ -257,15 +279,13 @@
                 }
             }
 
-            if(this.proteins.length < 5 && (now - this.lastCreatedProteinTime) > 5000 ){
-                this.createProtein();
-            }
-
             var bacteria;
             for(var i = 0;i < this.bacterias.length; i++){
                 bacteria = this.bacterias[i];
                 if (bacteria.intersects(this.cell)) {
-                    this.cell.health -= bacteria.attack;
+
+                    // TODO refactor into cell prototype
+                    this.cell.health = Math.max(this.cell.health - bacteria.attack, 0);
 
                     switch(bacteria.getParent()) {
                         case Bacteria:
@@ -277,8 +297,7 @@
                     }
                 }
             }
-
-
+            // draw
             this.clear();
            
             for(var i = 0; i < this.proteins.length; i++){
@@ -296,6 +315,11 @@
             this.healthElement.textContent = this.cell.health;
             this.timerElement.textContent = ((now - this.startTime)/1000).toFixed(1);
 
+            // continue?
+            if(this.cell.health <= 0){
+                deathLesson.teach();
+                clearInterval(this.timer);
+            }
         },
 
         createBacteria: function(bacteriaType) {
