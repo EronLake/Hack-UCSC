@@ -104,7 +104,18 @@
         attack: .5,
         width: 40,
         height: 40,
-        image: document.getElementById('standardBacteriaImage')
+        velocity: 6,
+        image: document.getElementById('standardBacteriaImage'),
+        think: function(cell) {
+            var deltaX = this.x - cell.x;
+            var deltaY = this.y - cell.y
+            if(Math.abs(deltaX) > Math.abs(deltaY)){
+                this.direction = (deltaX > 0) ? LEFT : RIGHT;
+            } else {
+                this.direction = (deltaY> 0) ? UP : DOWN;
+            }
+
+        }
     })
 
 
@@ -180,6 +191,13 @@
 
         loop: function () {
             this.cell.move(this.bounds);
+
+            var bacteria;
+            for(var i= 0; i < this.bacterias.length; i++){
+                bacteria = this.bacterias[i];
+                bacteria.think(this.cell);
+                bacteria.move(this.bounds);
+            }
 
             var now = Date.now();
             var i = this.proteins.length;
