@@ -102,7 +102,7 @@
         health: MAX_HEALTH,
         width: 50,
         height: 50,
-        velocity: 10,
+        velocity: 5,
         score: 0, 
         image: document.getElementById('cellImage'),
         eat: function(nutrition){
@@ -116,7 +116,7 @@
         attack: .5,
         width: 40,
         height: 40,
-        velocity: 4,
+        velocity: 3,
         iq: .8,
         image: document.getElementById('standardBacteriaImage'),
         think: function(cell) {
@@ -140,7 +140,7 @@
 
     var BombBacteria = Bacteria.create({
         attack: 1,
-        velocity: 1,
+        velocity: .5,
         iq: .2,
         image: document.getElementById('bombBacteriaImage')
     })
