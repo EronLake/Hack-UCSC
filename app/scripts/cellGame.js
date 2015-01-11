@@ -25,6 +25,9 @@ var Sprite = Base.create({
     },
     getBottom: function () {
         return this.y + this.height;
+    },
+    draw: function(context){
+        context.drawImage(this.image, this.getLeft(), this.getTop(), this.width, this.height);
     }
 })
 
@@ -39,8 +42,10 @@ var Protein = Sprite.create({
 
 var Cell = MoveableSprite.create({
     health: 100,
-    width: 10,
-    height: 10
+    width: 50,
+    height: 50,
+    velocity: 10,
+    image: document.getElementById('cellImage')
 })
 
 var Bacteria = MoveableSprite.create({
@@ -54,8 +59,18 @@ var jimmy = Cell.create({
     y: 7
 })
 
-console.log(jimmy.getTop()," ", jimmy.getRight()," ",jimmy.getBottom()," ", jimmy.getLeft());
-//console.log(Bacteria.attack)
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+    
+
+setInterval(function () {
+    canvas.width = canvas.width;
+    jimmy.draw(context);
+    jimmy.x += jimmy.velocity;
+}, 10)
+
+
+
 
 
  //     return (Math.min(this.bottom, region.bottom) >= Math.max(this.top, region.top) && Math.min(this.right, region.right) >= Math.max(this.left, region.left));
