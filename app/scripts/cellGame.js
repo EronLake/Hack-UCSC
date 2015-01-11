@@ -21,6 +21,18 @@
     var Base = {
         create: function(config){
             return $.extend(Object.create(this),config)
+        },
+
+        isInstanceOf: function(prototype) {
+            return prototype.isPrototypeOf(this);
+        },
+
+        getParent: function() {
+            return Object.getPrototypeOf(this);
+        },
+
+        isChildOf: function(prototype) {
+            return this.getParent() === prototype;
         }
     }
 
@@ -124,6 +136,31 @@
         image: document.getElementById('bombBacteriaImage')
     })
 
+    var Lesson = Base.create({
+        text: '',
+        taught: false,
+        teach: function() {
+            if(this.taught === false){
+              alert(this.text);
+              this.taught = true;
+            }
+        }
+
+    })
+
+    var proteinLesson = Lesson.create({
+        text: 'Cell need protein to survive'
+    })
+
+    var bacteriaLesson = Lesson.create({
+        text: 'Bacteria can hurt cells'
+    })
+
+    var bombBacteriaLesson = Lesson.create({
+        text: 'viruses can critically injure cells'
+    })
+
+
 
     var World = Base.create({
         width: 0,
@@ -216,6 +253,7 @@
                 if (protein.intersects(this.cell)) {
                     this.proteins.splice(i, 1); 
                     this.cell.eat(protein.nutrition);
+                    proteinLesson.teach();
                 }
             }
 
@@ -227,7 +265,16 @@
             for(var i = 0;i < this.bacterias.length; i++){
                 bacteria = this.bacterias[i];
                 if (bacteria.intersects(this.cell)) {
-                   this.cell.health -= bacteria.attack;
+                    this.cell.health -= bacteria.attack;
+
+                    switch(bacteria.getParent()) {
+                        case Bacteria:
+                            bacteriaLesson.teach();
+                        break;
+                        case BombBacteria:
+                            bombBacteriaLesson.teach()
+                        break;
+                    }
                 }
             }
 
